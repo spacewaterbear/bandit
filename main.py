@@ -1,8 +1,6 @@
 import numpy as np
-from loguru import logger
 from matplotlib import pyplot as plt
-
-from rl_agent.agentRandom import RandomAgent
+from rl_agent.agent_random import RandomAgent
 from rl_agent.agentepsi_greedy import EpsiGreedyAgent
 from rl_env.bandit_env import BanditEnv
 from variables import eps, earning_prob
@@ -25,7 +23,6 @@ def plot_reward(data_to_plot: dict, nb_episode: int):
     plt.show()
 
 
-
 if __name__ == '__main__':
     env = BanditEnv(earning_distribution=earning_prob)
     nb_action = len(earning_prob)
@@ -33,7 +30,7 @@ if __name__ == '__main__':
 
     epsis = [0.01, 0.1, 0.3]
     agents_greedy = [EpsiGreedyAgent(eps=eps, nb_action=nb_action) for eps in epsis]
-    agents = [RandomAgent(eps=eps, nb_action=nb_action)] +agents_greedy
+    agents = [RandomAgent(eps=eps, nb_action=nb_action)] + agents_greedy
     data_to_plot = {
         "title": [],
         "data": []
