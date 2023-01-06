@@ -1,9 +1,10 @@
 import numpy as np
+import wandb
 from matplotlib import pyplot as plt
 from rl_agent.agent_random import RandomAgent
 from rl_agent.agent_epsi_greedy import EpsiGreedyAgent
 from rl_env.bandit_env import BanditEnv
-from variables import eps, earning_prob
+from variables import eps, earning_prob, WANDB_API_KEY
 
 
 def plot_reward(data_to_plot: dict, nb_episode: int):
@@ -35,8 +36,20 @@ if __name__ == '__main__':
         "title": [],
         "data": []
     }
+    wandb.login(key=WANDB_API_KEY)
+
     for agent in agents:
         rewards = []
+        wandb.init(
+            # Set the project where this run will be logged
+            project="bandit-rl-xp",
+            # We pass a run name (otherwise it’ll be randomly assigned, like sunshine-lollypop-10)
+            name=f"experiment_{agent.name}",
+            # Track hyperparameters and run metadata
+            config={
+                "eps": agent.eps,
+                "nb_episode": nb_episode,
+            })
         for _ in range(nb_episode):
             action = agent.pull()
             ob, r, done, info = env.step(action)
@@ -44,9 +57,11 @@ if __name__ == '__main__':
             rewards.append(r)
 
         cum_sum_r = np.cumsum(rewards)
+        final_reward = cum_sum_r[-1]
         agent_name = agent.name
         title = f"{agent_name} eps: {agent.eps}"
         data_to_plot["title"].append(title)
         data_to_plot["data"].append(cum_sum_r)
-
+        wandb.log({"final_reward": final_reward})
+        wandb.finish()
     plot_reward(data_to_plot, nb_episode=nb_episode)
