@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from rl_agent.agent_random import RandomAgent
-from rl_agent.agentepsi_greedy import EpsiGreedyAgent
+from rl_agent.agent_epsi_greedy import EpsiGreedyAgent
 from rl_env.bandit_env import BanditEnv
 from variables import eps, earning_prob
 
